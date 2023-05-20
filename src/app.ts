@@ -1,7 +1,7 @@
 import cors from "cors";
 
 import express, { Application, NextFunction, Request, Response } from "express";
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const app: Application = express();
 
@@ -32,7 +32,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
       lastName: string;
     };
     dateOfBirth?: string;
-    gender: "male" | "female";
+    gender?: "male" | "female";
     email?: string;
     contactNo: string;
     emergencyContactNo: string;
@@ -55,10 +55,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
       lastName: { type: String, required: true },
     },
     dateOfBirth: { type: String },
-    gender: {
-      gender: "male",
-      required: true,
-    },
+
     email: { type: String },
     contactNo: { type: String, required: true },
     emergencyContactNo: { type: String, required: true },
@@ -66,8 +63,31 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
     permanentAddress: { type: String, required: true },
   });
 
-  // res.send("Hello World sultana!");
-  // next();
+  //create model
+  const User = model<IUser>("User", userSchema);
+
+  const createUserToDB = async () => {
+    const user = new User({
+      id: 2,
+      role: "student",
+      password: "password123",
+      name: {
+        firstName: "Md.",
+        middleName: "Nayim",
+        lastName: "Hossen",
+      },
+      dateOfBirth: "20/08/1999",
+      email: "nayimh2015@gmail.com",
+      contactNo: "01772936103",
+      emergencyContactNo: "01730930440",
+      presentAddress: "Mymensingh",
+      permanentAddress: "Dhaka",
+    });
+    await user.save();
+    console.log(user);
+  };
+
+  createUserToDB();
 });
 
 export default app;
