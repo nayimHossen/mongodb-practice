@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createUserToDB, getUsersFromDB } from "./user.service";
+import { createUserToDB, getUserById, getUsersFromDB } from "./user.service";
 
 export const createUser = async (
   req: Request,
@@ -23,5 +23,20 @@ export const getUsers = async (
   res.status(200).json({
     status: "success",
     data: users,
+  });
+};
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const id = req.params.id;
+  console.log(id);
+
+  const user = await getUserById(id);
+  res.status(200).json({
+    status: "success",
+    data: user,
   });
 };
